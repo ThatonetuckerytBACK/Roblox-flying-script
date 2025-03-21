@@ -1,0 +1,30 @@
+local userInputService = game:GetService("UserInputService")
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+-- Function to change the player's size
+local function changeSize(multiplier)
+    for _, part in pairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.Size = part.Size * multiplier
+        end
+    end
+
+    -- Adjust humanoid's properties for proper scaling
+    humanoid.BodyDepthScale.Value = humanoid.BodyDepthScale.Value * multiplier
+    humanoid.BodyWidthScale.Value = humanoid.BodyWidthScale.Value * multiplier
+    humanoid.BodyHeightScale.Value = humanoid.BodyHeightScale.Value * multiplier
+    humanoid.HeadScale.Value = humanoid.HeadScale.Value * multiplier
+end
+
+-- Listen for key presses
+userInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+
+    if input.KeyCode == Enum.KeyCode.J then
+        changeSize(1.1) -- Grow by 10%
+    elseif input.KeyCode == Enum.KeyCode.K then
+        changeSize(0.9) -- Shrink by 10%
+    end
+end)
