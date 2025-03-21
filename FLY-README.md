@@ -1,3 +1,3 @@
 PRESS F TO FLY, F TO STOP FLYING, PRETTY SIMPLE. ALSO...
 
-MAKE SURE YOU COPY ALL IN THE CODE HERE: https://github.com/ThatonetuckerytBACK/Roblox-flying-script/blob/main/CODE
+MAKE SURE YOU COPY ALL IN THE CODE HERE: https://github.com/ThatonetuckerytBACK/roblox-scripts/blob/main/FLY%20SCRIPT
