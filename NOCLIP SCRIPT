@@ -1,0 +1,59 @@
+local userInputService = game:GetService("UserInputService")
+local runService = game:GetService("RunService")
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local isNoclipEnabled = false
+
+-- Function to enable/disable noclip
+local function toggleNoclip()
+    isNoclipEnabled = not isNoclipEnabled
+    if isNoclipEnabled then
+        print("Noclip enabled")
+    else
+        print("Noclip disabled")
+    end
+end
+
+-- Listen for the "N" key to toggle noclip
+userInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.N then
+        toggleNoclip()
+    end
+end)
+
+-- Prevent collisions with walls while keeping floor collision
+runService.Stepped:Connect(function()
+    if isNoclipEnabled then
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") and part.CanCollide then
+                part.CanCollide = false
+            end
+        end
+    else
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = true
+            end
+        end
+    end
+end)
+
+-- Ensure the player doesn't fall through the floor
+runService.Heartbeat:Connect(function()
+    if isNoclipEnabled then
+        local rayOrigin = humanoidRootPart.Position
+        local rayDirection = Vector3.new(0, -10, 0)
+        local raycastParams = RaycastParams.new()
+        raycastParams.FilterDescendantsInstances = {character}
+        raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+
+        local raycastResult = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
+
+        if not raycastResult then
+            -- Prevent falling if there's no floor detected
+            humanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+        end
+    end
+end)
